@@ -1,0 +1,32 @@
+keycloak:
+  enabled: true #false为禁用keycloak spring boot Adapter
+  realm: dev-demo #不区分大小写
+  auth-server-url: http://localhost:8080/auth
+  ssl-required: all #全部请求
+  resource: service-dev-demo #新建的clients的client-id
+  credentials:
+    secret: 5e138c0f-3302-4193-b4aa-57485315a45e #新建的clients的credentials
+  security-constraints[0]:
+    authRoles[0]: ROLE_USER
+    authRoles[1]: ROLE_3RD_SYSTEM
+    security-collections[0]:
+      name: protected
+      patterns[0]: /service/* #访问拦截前缀，例如http://localhost:8090/service/index会拦截到
+    bearer-only: true
+    policy-enforcer-config:
+      enforcement-mode: ENFORCING
+      lazy-load-paths: true
+      http-method-as-scope: true
+      paths:
+        - path: /csrf
+          enforcement-mode: DISABLED
+        - path: /favicon.ico
+          enforcement-mode: DISABLED
+        - path: /actuator/*
+          enforcement-mode: DISABLED
+        - path: /error
+          enforcement-mode: DISABLED
+        - path: /webjars/*
+          enforcement-mode: DISABLED
+        - path: /v2/api-docs
+          enforcement-mode: DISABLED
